@@ -1,6 +1,10 @@
 #include "esp_camera.h"
 #include <WiFi.h>
+//WIFI SETTING
+#define WIFINAME "WHY KE"
+#define WIFIPASS "wahyu12345"
 
+//CAMERA PIN SETTING
 #define PWDN_GPIO_NUM     32
 #define RESET_GPIO_NUM    -1
 #define XCLK_GPIO_NUM      0
@@ -19,8 +23,14 @@
 #define HREF_GPIO_NUM     23
 #define PCLK_GPIO_NUM     22
 
+//GLOBAL FUNCTION
+void startCameraServer();
+void showIP();
+
+//VAR
+extern String myIP="";
 void setup() {
- 
+  Serial.begin(115200);
   camera_config_t config;
   config.ledc_channel = LEDC_CHANNEL_0;
   config.ledc_timer = LEDC_TIMER_0;
@@ -42,6 +52,7 @@ void setup() {
   config.pin_reset = RESET_GPIO_NUM;
   config.xclk_freq_hz = 20000000;
   config.pixel_format = PIXFORMAT_JPEG;
+  
   //init with high specs to pre-allocate larger buffers
   if (psramFound()) {
     config.frame_size = FRAMESIZE_UXGA;
@@ -53,6 +64,32 @@ void setup() {
     config.fb_count = 1;
   }
 
+  esp_err_t err = esp_camera_init(&config);
+  if (err != ESP_OK) {
+    Serial.printf("Camera init failed with error 0x%x", err);
+    return;
+  }
+
+  sensor_t * s = esp_camera_sensor_get();
+  //initial sensors are flipped vertically and colors are a bit saturated
+  if (s->id.PID == OV3660_PID) {
+    s->set_vflip(s, 1);//flip it back
+    s->set_brightness(s, 1);//up the blightness just a bit
+    s->set_saturation(s, -2);//lower the saturation
+  }
+  //drop down frame size for higher initial frame rate
+  s->set_framesize(s, FRAMESIZE_QVGA);
+
+  WiFi.begin(WIFINAME, WIFIPASS);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  myIP=WiFi.localIP().toString();
+  Serial.println(myIP);
+  showIP();
+  delay(2000);
+  startCameraServer();
 }
 
 void loop() {
