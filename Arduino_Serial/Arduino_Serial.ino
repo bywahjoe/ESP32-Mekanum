@@ -6,10 +6,16 @@ Servo myservo2;
 Servo myservo3;
 
 char recv;
+int setDefaultSpeed = 150;
 
-void maju(int myspeed = 150);
-void mundur(int myspeed = -150);
-
+void maju(int myspeed = setDefaultSpeed);
+void mundur(int myspeed = setDefaultSpeed);
+void motorKiriA(int myspeed = setDefaultSpeed);
+void motorKiriB(int myspeed = setDefaultSpeed);
+void motorKananA(int myspeed = setDefaultSpeed);
+void motorKananB(int myspeed = setDefaultSpeed);
+void kiri(int myspeed = setDefaultSpeed);
+void kanan(int myspeed = setDefaultSpeed);
 void setup() {
   Serial.begin(115200);
   //SERVO
@@ -39,29 +45,48 @@ void setup() {
   pinMode(kananB_LPWM, OUTPUT);
 }
 void loop() {
-  if (Serial.available()) {
-
-    recv = Serial.read();
-
-    Serial.println(recv);
-    if (recv == 'w') maju();
-    else if (recv == 'a') kiri();
-    else if (recv == 's') mundur();
-    else if (recv == 'd') kanan();
-    else if (recv == 't') tarik();
-    else if (recv == 'l') lepas();
-
-  } else {
-    stops();
-  }
-
+  //  if (Serial.available()) {
+  //
+  //    recv = Serial.read();
+  //
+  //    Serial.println(recv);
+  //    if (recv == 'w') maju();
+  //    else if (recv == 'a') kiri();
+  //    else if (recv == 's') mundur();
+  //    else if (recv == 'd') kanan();
+  //    else if (recv == 't') tarik();
+  //    else if (recv == 'l') lepas();
+  //    else{stops();}
+  //  } 
+  maju();
+  delay(3000);
+  stops();
+  delay(3000);
+  mundur();
+  delay(3000);
+  stops();
+  delay(3000);
+  kiri();
+  delay(3000);
+  stops();
+  delay(3000);
+  kanan();
+  delay(3000);
+  stops();
+  delay(3000);
 }
 void setDefaultServo() {}
 void tarik() {}
 void lepas() {}
-void motorKiriA(int myspeed = 150) {
+void motorKiriA(int myspeed) {
   int varA = 0, varB = 0;
+
+  digitalWrite(kiriA_ENA, HIGH);
+  digitalWrite(kiriA_ENB, HIGH);
+
   if (myspeed == 0) {
+    digitalWrite(kiriA_ENA, LOW);
+    digitalWrite(kiriA_ENB, LOW);
   }
   else if (myspeed < 0) {
     varB = abs(myspeed);
@@ -69,15 +94,19 @@ void motorKiriA(int myspeed = 150) {
   else {
     varA = myspeed;
   }
-  digitalWrite(kiriA_ENA, HIGH);
-  digitalWrite(kiriA_ENB, HIGH);
   analogWrite(kiriA_RPWM, varA);
   analogWrite(kiriA_LPWM, varB);
 
 }
-void motorKiriB(int myspeed = 150) {
+void motorKiriB(int myspeed) {
   int varA = 0, varB = 0;
+
+  digitalWrite(kiriB_ENA, HIGH);
+  digitalWrite(kiriB_ENB, HIGH);
+
   if (myspeed == 0) {
+    digitalWrite(kiriB_ENA, HIGH);
+    digitalWrite(kiriB_ENB, HIGH);
   }
   else if (myspeed < 0) {
     varB = abs(myspeed);
@@ -85,14 +114,19 @@ void motorKiriB(int myspeed = 150) {
   else {
     varA = myspeed;
   }
-  digitalWrite(kiriB_ENA, HIGH);
-  digitalWrite(kiriB_ENB, HIGH);
   analogWrite(kiriB_RPWM, varA);
   analogWrite(kiriB_LPWM, varB);
 }
-void motorKananA(int myspeed = 150) {
+void motorKananA(int myspeed) {
   int varA = 0, varB = 0;
+
+  digitalWrite(kananA_ENA, HIGH);
+  digitalWrite(kananA_ENB, HIGH);
+
   if (myspeed == 0) {
+    digitalWrite(kananA_ENA, LOW);
+    digitalWrite(kananA_ENB, LOW);
+
   }
   else if (myspeed < 0) {
     varB = abs(myspeed);
@@ -100,14 +134,20 @@ void motorKananA(int myspeed = 150) {
   else {
     varA = myspeed;
   }
-  digitalWrite(kananA_ENA, HIGH);
-  digitalWrite(kananA_ENB, HIGH);
+
   analogWrite(kananA_RPWM, varA);
   analogWrite(kananA_LPWM, varB);
 }
-void motorKananB(int myspeed = 150) {
+void motorKananB(int myspeed) {
   int varA = 0, varB = 0;
+
+  digitalWrite(kananB_ENA, HIGH);
+  digitalWrite(kananB_ENB, HIGH);
+
+
   if (myspeed == 0) {
+    digitalWrite(kananB_ENA, LOW);
+    digitalWrite(kananB_ENB, LOW);
   }
   else if (myspeed < 0) {
     varB = abs(myspeed);
@@ -115,8 +155,6 @@ void motorKananB(int myspeed = 150) {
   else {
     varA = myspeed;
   }
-  digitalWrite(kananB_ENA, HIGH);
-  digitalWrite(kananB_ENB, HIGH);
   analogWrite(kananB_RPWM, varA);
   analogWrite(kananB_LPWM, varB);
 }
@@ -130,18 +168,38 @@ void stops() {
   setMotor(0, 0, 0, 0);
 }
 void rem() {
+  int valRem = 50;
+  digitalWrite(kiriA_ENA, HIGH);
+  digitalWrite(kiriA_ENB, HIGH);
+  analogWrite(kiriA_RPWM, valRem);
+  analogWrite(kiriA_LPWM, valRem);
 
+  digitalWrite(kiriB_ENA, HIGH);
+  digitalWrite(kiriB_ENB, HIGH);
+  analogWrite(kiriB_RPWM, valRem);
+  analogWrite(kiriB_LPWM, valRem);
 
+  digitalWrite(kananA_ENA, HIGH);
+  digitalWrite(kananA_ENB, HIGH);
+  analogWrite(kananA_RPWM, valRem);
+  analogWrite(kananA_LPWM, valRem);
+
+  digitalWrite(kananB_ENA, HIGH);
+  digitalWrite(kananB_ENB, HIGH);
+  analogWrite(kananB_RPWM, valRem);
+  analogWrite(kananB_LPWM, valRem);
 }
-void maju(int myspeed = 150) {
+
+void maju(int myspeed) {
   setMotor(myspeed, myspeed, myspeed, myspeed);
 }
-void mundur(int myspeed = -150) {
-  setMotor(myspeed, myspeed, myspeed, myspeed);
+void mundur(int myspeed) {
+  setMotor(-myspeed, -myspeed, -myspeed, -myspeed);
 }
-void kiri() {
 
+void kiri(int myspeed) {
+  setMotor(-myspeed, myspeed, myspeed, -myspeed);
 }
-void kanan() {
-
+void kanan(int myspeed) {
+  setMotor(myspeed, -myspeed, -myspeed, myspeed);
 }
