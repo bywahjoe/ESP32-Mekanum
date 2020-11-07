@@ -1,8 +1,15 @@
 #include "esp_camera.h"
 #include <WiFi.h>
+#include <HTTPClient.h>
+
 //WIFI SETTING
 #define WIFINAME "WHY KE"
 #define WIFIPASS "wahyu12345"
+
+//POST IP TO WEB
+#define IDROBOT "M2"
+#define URLWEB "https://ip.bywahjoe.com/post.php"
+String APIKEY = "sendIP4";
 
 //CAMERA PIN SETTING
 #define PWDN_GPIO_NUM     32
@@ -26,9 +33,9 @@
 //GLOBAL FUNCTION
 void startCameraServer();
 void showIP();
-
+void postWebIP(String dataIP, String id = IDROBOT);
 //VAR
-extern String myIP="";
+extern String myIP = "";
 void setup() {
   Serial.begin(115200);
   camera_config_t config;
@@ -52,7 +59,7 @@ void setup() {
   config.pin_reset = RESET_GPIO_NUM;
   config.xclk_freq_hz = 20000000;
   config.pixel_format = PIXFORMAT_JPEG;
-  
+
   //init with high specs to pre-allocate larger buffers
   if (psramFound()) {
     config.frame_size = FRAMESIZE_UXGA;
@@ -85,14 +92,41 @@ void setup() {
     delay(500);
     Serial.print(".");
   }
-  myIP=WiFi.localIP().toString();
+  myIP = WiFi.localIP().toString();
   Serial.println(myIP);
-  showIP();
+  //showIP();
+
+  postWebIP(myIP);
+
   delay(2000);
   startCameraServer();
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
+
+}
+void postWebIP(String dataIP, String id) {
+  HTTPClient postWeb;
+
+  postWeb.begin(URLWEB);
+  postWeb.addHeader("Content-Type", "application/x-www-form-urlencoded");
+
+  String dataku = "apiKEY=" + APIKEY + "&MYID=" + IDROBOT + "&MYIP=" + dataIP;
+  Serial.println(dataku);
+
+  int httpResponseCode = postWeb.POST(dataku);
+
+  //  UNCOMENT TO CEK ERROR
+  //     if (httpResponseCode>0) {
+  //        Serial.print("HTTP Response code: ");
+  //        Serial.println(httpResponseCode);
+  //      }
+  //      else {
+  //        Serial.print("Error code: ");
+  //        Serial.println(httpResponseCode);
+  //      }
+  postWeb.end();
+
 
 }

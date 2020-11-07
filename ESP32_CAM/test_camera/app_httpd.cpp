@@ -294,7 +294,7 @@ static esp_err_t index_handler(httpd_req_t *req){
     page += "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0\">\n";
     page+="<script>var xhttp = new XMLHttpRequest();</script>";
     page+="<script>function sendSerial(arg){xhttp.open('GET',arg,true);xhttp.send()}</script>";
-    page+="<button onmousedown=sendSerial('dataa') ontouchstart=sendSerial('dataw') ontouchend=sendSerial('dataa')>OK</button>";
+    page+="<button onmousedown=sendSerial('dataa') ontouchstart=sendSerial('dataw') ontouchend=sendSerial('datax')>OK</button>";
     page+="<b>hello World</b>";
     return httpd_resp_send(req, &page[0], strlen(&page[0]));
 }
@@ -319,6 +319,11 @@ static esp_err_t dataD_handler(httpd_req_t *req){
     httpd_resp_set_type(req, "text/html");
     return httpd_resp_send(req, "OK", 2);
 }
+static esp_err_t dataX_handler(httpd_req_t *req){
+    Serial.println("x");
+    httpd_resp_set_type(req, "text/html");
+    return httpd_resp_send(req, "OK", 2);
+}
 void startCameraServer(){
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
 
@@ -340,10 +345,16 @@ void startCameraServer(){
         .handler   = dataS_handler,
         .user_ctx  = NULL
     };
-      httpd_uri_t dataD_uri = {
+     httpd_uri_t dataD_uri = {
         .uri       = "/datad",
         .method    = HTTP_GET,
         .handler   = dataD_handler,
+        .user_ctx  = NULL
+    };
+      httpd_uri_t dataX_uri = {
+        .uri       = "/datax",
+        .method    = HTTP_GET,
+        .handler   = dataX_handler,
         .user_ctx  = NULL
     };
     
@@ -390,12 +401,13 @@ void startCameraServer(){
         httpd_register_uri_handler(camera_httpd, &index_uri);
         httpd_register_uri_handler(camera_httpd, &status_uri);
         httpd_register_uri_handler(camera_httpd, &capture_uri);
-       
+        
         //INSTAL URI SERIAL HANDLER
         httpd_register_uri_handler(camera_httpd, &dataW_uri);
         httpd_register_uri_handler(camera_httpd, &dataA_uri);
         httpd_register_uri_handler(camera_httpd, &dataS_uri);
         httpd_register_uri_handler(camera_httpd, &dataD_uri);
+        httpd_register_uri_handler(camera_httpd, &dataX_uri);
     }
 
     config.server_port += 1;
