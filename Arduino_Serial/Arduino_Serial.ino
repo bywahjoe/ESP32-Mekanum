@@ -5,7 +5,7 @@ Servo myservo1;
 Servo myservo2;
 Servo myservo3;
 
-char recv;
+String recv;
 int setDefaultSpeed = 150;
 
 void maju(int myspeed = setDefaultSpeed);
@@ -18,6 +18,7 @@ void kiri(int myspeed = setDefaultSpeed);
 void kanan(int myspeed = setDefaultSpeed);
 void setup() {
   Serial.begin(115200);
+  Serial1.begin(115200);
   //SERVO
   myservo1.attach(pin_servo1);
   myservo2.attach(pin_servo2);
@@ -43,37 +44,44 @@ void setup() {
   pinMode(kananB_ENB, OUTPUT);
   pinMode(kananB_RPWM, OUTPUT);
   pinMode(kananB_LPWM, OUTPUT);
+
+  delay(10000);//WAIT ESP BOOTING
 }
 void loop() {
-  //  if (Serial.available()) {
-  //
-  //    recv = Serial.read();
-  //
-  //    Serial.println(recv);
-  //    if (recv == 'w') maju();
-  //    else if (recv == 'a') kiri();
-  //    else if (recv == 's') mundur();
-  //    else if (recv == 'd') kanan();
-  //    else if (recv == 't') tarik();
-  //    else if (recv == 'l') lepas();
-  //    else{stops();}
-  //  } 
-  maju();
-  delay(3000);
-  stops();
-  delay(3000);
-  mundur();
-  delay(3000);
-  stops();
-  delay(3000);
-  kiri();
-  delay(3000);
-  stops();
-  delay(3000);
-  kanan();
-  delay(3000);
-  stops();
-  delay(3000);
+
+  if (Serial1.available()) {
+    recv = char(Serial1.read());
+    recv.trim();
+    if (recv.length() > 0) {
+
+      Serial.println(recv);
+      if (recv == "w") maju();
+      else if (recv == "a") kiri();
+      else if (recv == "s") mundur();
+      else if (recv == "d") kanan();
+      else if (recv == "t") tarik();
+      else if (recv == "l") lepas();
+      else if (recv == "x") stops();
+      else{}
+      //Serial.println("OK");
+    }
+  }
+//  maju();
+//  delay(3000);
+//  stops();
+//  delay(3000);
+//  mundur();
+//  delay(3000);
+//  stops();
+//  delay(3000);
+//  kiri();
+//  delay(3000);
+//  stops();
+//  delay(3000);
+//  kanan();
+//  delay(3000);
+//  stops();
+//  delay(3000);
 }
 void setDefaultServo() {}
 void tarik() {}
