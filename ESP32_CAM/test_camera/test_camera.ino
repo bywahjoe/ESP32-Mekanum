@@ -1,10 +1,13 @@
+//DOCUMENTATION : https://github.com/bywahjoe/ESP32-Mekanum
+
 #include "esp_camera.h"
 #include <WiFi.h>
 #include <HTTPClient.h>
 
 //WIFI SETTING
-#define WIFINAME "WHY KE"
-#define WIFIPASS "wahyu12345"
+#define WIFINAME "robot"
+#define WIFIPASS "robot1234"
+#define pinled 4
 
 //POST IP TO WEB
 #define IDROBOT "M2"
@@ -37,6 +40,8 @@ void postWebIP(String dataIP, String id = IDROBOT);
 //VAR
 extern String myIP = "";
 void setup() {
+  pinMode(pinled,OUTPUT);
+  digitalWrite(pinled,HIGH);
   Serial.begin(115200);
   camera_config_t config;
   config.ledc_channel = LEDC_CHANNEL_0;

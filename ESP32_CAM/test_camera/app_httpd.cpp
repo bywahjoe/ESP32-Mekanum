@@ -298,7 +298,14 @@ static esp_err_t index_handler(httpd_req_t *req) {
   page += "<center>";
 
   page += "<img src='http://" + myIP + ":81/stream'><br>";
+  //MENU SET SERVO
+  page += "<button style=margin:5px;width:90px;height:60px;background-color:#1F1FF9;color:white;font-weight:bold onmousedown=sendSerial('datay') ontouchstart=sendSerial('datay')>L-CAM</button>";
+  page += "<button style=margin:5px;width:90px;height:60px;background-color:#1F1FF9;color:white;font-weight:bold onmousedown=sendSerial('datau') ontouchstart=sendSerial('datau')>C-CAM</button>";
+  page += "<button style=margin:5px;width:90px;height:60px;background-color:#1F1FF9;color:white;font-weight:bold onmousedown=sendSerial('datai') ontouchstart=sendSerial('datai')>R-CAM</button>";
+  page += "<button style=margin:5px;width:90px;height:60px;background-color:#1F1FF9;color:white;font-weight:bold onmousedown=sendSerial('datao') ontouchstart=sendSerial('datao')>FREE-A</button>";
+  page += "<button style=margin:5px;width:90px;height:60px;background-color:#1F1FF9;color:white;font-weight:bold onmousedown=sendSerial('datap') ontouchstart=sendSerial('datap')>FREE-B</button>";
   //MENU ATAS
+  page+="<br>";
   page += "<button style=margin:5px;width:90px;height:70px;background-color:green;color:white;font-weight:bold onmousedown=sendSerial('datat') ontouchstart=sendSerial('datat')>TARIK</button>";
   page += "<button style=margin:5px;width:90px;height:70px;background-color:black;color:white;font-weight:bold onmousedown=sendSerial('dataw') onmouseup=getsend('datax') ontouchstart=sendSerial('dataw') ontouchend=sendSerial('datax')>MAJU</button>";
   page += "<button style=margin:5px;width:90px;height:70px;background-color:green;color:white;font-weight:bold onmousedown=sendSerial('datal') ontouchstart=sendSerial('datal')>LEPAS</button>";
@@ -309,7 +316,9 @@ static esp_err_t index_handler(httpd_req_t *req) {
   page += "<button style=margin:5px;width:90px;height:70px;background-color:#E41F33;color:white;font-weight:bold onmousedown=sendSerial('datad') onmouseup=getsend('datax') ontouchstart=sendSerial('datad') ontouchend=sendSerial('datax')>KANAN</button>";
   page += "<br>";
   //MENU BAWAH
+  page += "<button style=margin:5px;width:90px;height:70px;background-color:#B71FE4;color:white;font-weight:bold onmousedown=sendSerial('dataq') onmouseup=getsend('datax') ontouchstart=sendSerial('dataq') ontouchend=sendSerial('datax')>MUTER</button>";
   page += "<button style=margin:5px;width:90px;height:70px;background-color:black;color:white;font-weight:bold onmousedown=sendSerial('datas') onmouseup=getsend('datax') ontouchstart=sendSerial('datas') ontouchend=sendSerial('datax')>MUNDUR</button>";
+  page += "<button style=margin:5px;width:90px;height:70px;background-color:#B71FE4;color:white;font-weight:bold onmousedown=sendSerial('dataq') onmouseup=getsend('datax') ontouchstart=sendSerial('datae') ontouchend=sendSerial('datae')>MUTER</button>";
   page += "<br>";
 
   page += "</center>";
@@ -350,6 +359,41 @@ static esp_err_t dataD_handler(httpd_req_t *req) {
 }
 static esp_err_t dataX_handler(httpd_req_t *req) {
   Serial.println("x");
+  httpd_resp_set_type(req, "text/html");
+  return httpd_resp_send(req, "OK", 2);
+}
+static esp_err_t dataQ_handler(httpd_req_t *req) {
+  Serial.println("q");
+  httpd_resp_set_type(req, "text/html");
+  return httpd_resp_send(req, "OK", 2);
+}
+static esp_err_t dataE_handler(httpd_req_t *req) {
+  Serial.println("e");
+  httpd_resp_set_type(req, "text/html");
+  return httpd_resp_send(req, "OK", 2);
+}
+static esp_err_t dataY_handler(httpd_req_t *req) {
+  Serial.println("y");
+  httpd_resp_set_type(req, "text/html");
+  return httpd_resp_send(req, "OK", 2);
+}
+static esp_err_t dataU_handler(httpd_req_t *req) {
+  Serial.println("u");
+  httpd_resp_set_type(req, "text/html");
+  return httpd_resp_send(req, "OK", 2);
+}
+static esp_err_t dataI_handler(httpd_req_t *req) {
+  Serial.println("i");
+  httpd_resp_set_type(req, "text/html");
+  return httpd_resp_send(req, "OK", 2);
+}
+static esp_err_t dataO_handler(httpd_req_t *req) {
+  Serial.println("o");
+  httpd_resp_set_type(req, "text/html");
+  return httpd_resp_send(req, "OK", 2);
+}
+static esp_err_t dataP_handler(httpd_req_t *req) {
+  Serial.println("p");
   httpd_resp_set_type(req, "text/html");
   return httpd_resp_send(req, "OK", 2);
 }
@@ -399,7 +443,48 @@ void startCameraServer() {
     .handler   = dataX_handler,
     .user_ctx  = NULL
   };
-
+  httpd_uri_t dataQ_uri = {
+    .uri       = "/dataq",
+    .method    = HTTP_GET,
+    .handler   = dataQ_handler,
+    .user_ctx  = NULL
+  };
+    httpd_uri_t dataE_uri = {
+    .uri       = "/datae",
+    .method    = HTTP_GET,
+    .handler   = dataE_handler,
+    .user_ctx  = NULL
+  };
+    httpd_uri_t dataY_uri = {
+    .uri       = "/datay",
+    .method    = HTTP_GET,
+    .handler   = dataY_handler,
+    .user_ctx  = NULL
+  };
+    httpd_uri_t dataU_uri = {
+    .uri       = "/datau",
+    .method    = HTTP_GET,
+    .handler   = dataU_handler,
+    .user_ctx  = NULL
+  };
+    httpd_uri_t dataI_uri = {
+    .uri       = "/datai",
+    .method    = HTTP_GET,
+    .handler   = dataI_handler,
+    .user_ctx  = NULL
+  };
+    httpd_uri_t dataO_uri = {
+    .uri       = "/datao",
+    .method    = HTTP_GET,
+    .handler   = dataO_handler,
+    .user_ctx  = NULL
+  };
+    httpd_uri_t dataP_uri = {
+    .uri       = "/datap",
+    .method    = HTTP_GET,
+    .handler   = dataP_handler,
+    .user_ctx  = NULL
+  };
   httpd_uri_t index_uri = {
     .uri       = "/",
     .method    = HTTP_GET,
@@ -451,6 +536,13 @@ void startCameraServer() {
     httpd_register_uri_handler(camera_httpd, &dataS_uri);
     httpd_register_uri_handler(camera_httpd, &dataD_uri);
     httpd_register_uri_handler(camera_httpd, &dataX_uri);
+    httpd_register_uri_handler(camera_httpd, &dataQ_uri);
+    httpd_register_uri_handler(camera_httpd, &dataE_uri);
+    httpd_register_uri_handler(camera_httpd, &dataY_uri);
+    httpd_register_uri_handler(camera_httpd, &dataU_uri);
+    httpd_register_uri_handler(camera_httpd, &dataI_uri);
+    httpd_register_uri_handler(camera_httpd, &dataO_uri);
+    httpd_register_uri_handler(camera_httpd, &dataP_uri);
   }
 
   config.server_port += 1;

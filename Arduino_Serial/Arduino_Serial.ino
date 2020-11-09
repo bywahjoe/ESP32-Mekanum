@@ -1,3 +1,5 @@
+//DOCUMENTATION : https://github.com/bywahjoe/ESP32-Mekanum
+
 #include <Servo.h>
 #include "ardupin.h"
 
@@ -6,19 +8,21 @@ Servo myservo2;
 Servo myservo3;
 
 String recv;
-int setDefaultSpeed = 150;
+int setDefaultSpeed = 100;
 
 void maju(int myspeed = setDefaultSpeed);
 void mundur(int myspeed = setDefaultSpeed);
+void kiri(int myspeed = setDefaultSpeed);
+void kanan(int myspeed = setDefaultSpeed);
+void muterKiri(int myspeed = setDefaultSpeed);
+void muterKanan(int myspeed = setDefaultSpeed);
 void motorKiriA(int myspeed = setDefaultSpeed);
 void motorKiriB(int myspeed = setDefaultSpeed);
 void motorKananA(int myspeed = setDefaultSpeed);
 void motorKananB(int myspeed = setDefaultSpeed);
-void kiri(int myspeed = setDefaultSpeed);
-void kanan(int myspeed = setDefaultSpeed);
 void setup() {
   Serial.begin(115200);
-  Serial1.begin(115200);
+  Serial2.begin(115200);
   //SERVO
   myservo1.attach(pin_servo1);
   myservo2.attach(pin_servo2);
@@ -48,24 +52,31 @@ void setup() {
   delay(10000);//WAIT ESP BOOTING
 }
 void loop() {
-
-  if (Serial1.available()) {
-    recv = char(Serial1.read());
-    recv.trim();
-    if (recv.length() > 0) {
-
-      Serial.println(recv);
-      if (recv == "w") maju();
-      else if (recv == "a") kiri();
-      else if (recv == "s") mundur();
-      else if (recv == "d") kanan();
-      else if (recv == "t") tarik();
-      else if (recv == "l") lepas();
-      else if (recv == "x") stops();
-      else{}
-      //Serial.println("OK");
+  
+    if (Serial2.available()) {
+      recv = char(Serial2.read());
+      recv.trim();
+      if (recv.length() > 0) {
+  
+        Serial.println(recv);
+        if (recv == "w") maju();
+        else if (recv == "a") kiri();
+        else if (recv == "s") mundur();
+        else if (recv == "d") kanan();
+        else if (recv == "q") muterKiri();
+        else if (recv == "e") muterKanan();
+        else if (recv == "x") stops();
+        else if (recv == "t") tarik();
+        else if (recv == "l") lepas();
+        else if (recv == "y") camKiri();
+        else if (recv == "u") camTengah();
+        else if (recv == "i") camKanan();
+        else if (recv == "o") freeA();
+        else if (recv == "p") freeB();
+        else{}
+        //Serial.println("OK");
+      }
     }
-  }
 //  maju();
 //  delay(3000);
 //  stops();
@@ -74,18 +85,23 @@ void loop() {
 //  delay(3000);
 //  stops();
 //  delay(3000);
-//  kiri();
-//  delay(3000);
-//  stops();
-//  delay(3000);
-//  kanan();
-//  delay(3000);
-//  stops();
-//  delay(3000);
+  //  kiri();
+  //  delay(3000);
+  //  stops();
+  //  delay(3000);
+  //  kanan();
+  //  delay(3000);
+  //  stops();
+  //  delay(3000);
 }
 void setDefaultServo() {}
+void freeA(){}
+void freeB(){}
 void tarik() {}
 void lepas() {}
+void camKiri(){}
+void camTengah(){}
+void camKanan(){}
 void motorKiriA(int myspeed) {
   int varA = 0, varB = 0;
 
@@ -117,10 +133,10 @@ void motorKiriB(int myspeed) {
     digitalWrite(kiriB_ENB, HIGH);
   }
   else if (myspeed < 0) {
-    varB = abs(myspeed);
+    varB = abs(myspeed)+40;
   }
   else {
-    varA = myspeed;
+    varA = myspeed+40;
   }
   analogWrite(kiriB_RPWM, varA);
   analogWrite(kiriB_LPWM, varB);
@@ -210,4 +226,10 @@ void kiri(int myspeed) {
 }
 void kanan(int myspeed) {
   setMotor(myspeed, -myspeed, -myspeed, myspeed);
+}
+void muterKiri(int myspeed) {
+  setMotor(-myspeed, -myspeed, myspeed, myspeed);
+}
+void muterKanan(int myspeed) {
+  setMotor(myspeed, myspeed, -myspeed, -myspeed);
 }

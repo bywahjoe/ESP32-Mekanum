@@ -1,5 +1,5 @@
 //SERVO PIN
-#define pin_servo1 17
+#define pin_servo1 20
 #define pin_servo2 18
 #define pin_servo3 19
 
