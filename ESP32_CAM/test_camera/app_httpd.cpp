@@ -318,7 +318,7 @@ static esp_err_t index_handler(httpd_req_t *req) {
   //MENU BAWAH
   page += "<button style=margin:5px;width:90px;height:70px;background-color:#B71FE4;color:white;font-weight:bold onmousedown=sendSerial('dataq') onmouseup=getsend('datax') ontouchstart=sendSerial('dataq') ontouchend=sendSerial('datax')>MUTER</button>";
   page += "<button style=margin:5px;width:90px;height:70px;background-color:black;color:white;font-weight:bold onmousedown=sendSerial('datas') onmouseup=getsend('datax') ontouchstart=sendSerial('datas') ontouchend=sendSerial('datax')>MUNDUR</button>";
-  page += "<button style=margin:5px;width:90px;height:70px;background-color:#B71FE4;color:white;font-weight:bold onmousedown=sendSerial('dataq') onmouseup=getsend('datax') ontouchstart=sendSerial('datae') ontouchend=sendSerial('datae')>MUTER</button>";
+  page += "<button style=margin:5px;width:90px;height:70px;background-color:#B71FE4;color:white;font-weight:bold onmousedown=sendSerial('datae') onmouseup=getsend('datax') ontouchstart=sendSerial('datae') ontouchend=sendSerial('datax')>MUTER</button>";
   page += "<br>";
 
   page += "</center>";
