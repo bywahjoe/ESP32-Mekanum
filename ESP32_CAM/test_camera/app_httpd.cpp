@@ -294,21 +294,24 @@ static esp_err_t index_handler(httpd_req_t *req) {
   page += "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0\">\n";
   page += "<script>var xhttp = new XMLHttpRequest();</script>";
   page += "<script>function sendSerial(arg){xhttp.open('GET',arg,true);xhttp.send()}</script>";
-  page += "<style> body{user-select:none;}}</style>";
+  page += "<style> body{user-select:none;touch-action:manipulation}}</style>";
   page += "<center>";
 
   page += "<img src='http://" + myIP + ":81/stream'><br>";
   //MENU SET SERVO
-  page += "<button style=margin:5px;width:90px;height:60px;background-color:#1F1FF9;color:white;font-weight:bold onmousedown=sendSerial('datay') ontouchstart=sendSerial('datay')>L-CAM</button>";
-  page += "<button style=margin:5px;width:90px;height:60px;background-color:#1F1FF9;color:white;font-weight:bold onmousedown=sendSerial('datau') ontouchstart=sendSerial('datau')>C-CAM</button>";
-  page += "<button style=margin:5px;width:90px;height:60px;background-color:#1F1FF9;color:white;font-weight:bold onmousedown=sendSerial('datai') ontouchstart=sendSerial('datai')>R-CAM</button>";
-  page += "<button style=margin:5px;width:90px;height:60px;background-color:#1F1FF9;color:white;font-weight:bold onmousedown=sendSerial('datao') ontouchstart=sendSerial('datao')>FREE-A</button>";
-  page += "<button style=margin:5px;width:90px;height:60px;background-color:#1F1FF9;color:white;font-weight:bold onmousedown=sendSerial('datap') ontouchstart=sendSerial('datap')>FREE-B</button>";
+  page += "<button style=margin:5px;width:70px;height:60px;background-color:#1F1FF9;color:white;font-weight:bold onmousedown=sendSerial('datat') ontouchstart=sendSerial('datat')>C-B</button>";
+  page += "<button style=margin:5px;width:70px;height:60px;background-color:#1F1FF9;color:white;font-weight:bold onmousedown=sendSerial('datay') ontouchstart=sendSerial('datay')>A-UP</button>";
+  page += "<button style=margin:5px;width:70px;height:60px;background-color:#1F1FF9;color:white;font-weight:bold onmousedown=sendSerial('datau') ontouchstart=sendSerial('datau')>A-DW</button>";
+  page += "<button style=margin:5px;width:70px;height:60px;background-color:#1F1FF9;color:white;font-weight:bold onmousedown=sendSerial('datal') ontouchstart=sendSerial('datal')>C-T</button>";
+  page+="<br>";
+  page += "<button style=margin:5px;width:70px;height:60px;background-color:#1F1FF9;color:white;font-weight:bold onmousedown=sendSerial('datai') ontouchstart=sendSerial('datai')>B-UP</button>";
+  page += "<button style=margin:5px;width:70px;height:60px;background-color:green;color:white;font-weight:bold onmousedown=sendSerial('datap') ontouchstart=sendSerial('datap')>DFLT</button>";
+  page += "<button style=margin:5px;width:70px;height:60px;background-color:#1F1FF9;color:white;font-weight:bold onmousedown=sendSerial('datao') ontouchstart=sendSerial('datao')>B-DW</button>";
   //MENU ATAS
   page+="<br>";
-  page += "<button style=margin:5px;width:90px;height:70px;background-color:green;color:white;font-weight:bold onmousedown=sendSerial('datat') ontouchstart=sendSerial('datat')>TARIK</button>";
+  page += "<button style=margin:5px;width:90px;height:70px;background-color:green;color:white;font-weight:bold onmousedown=sendSerial('datan') ontouchstart=sendSerial('datan')>S-L</button>";
   page += "<button style=margin:5px;width:90px;height:70px;background-color:black;color:white;font-weight:bold onmousedown=sendSerial('dataw') onmouseup=getsend('datax') ontouchstart=sendSerial('dataw') ontouchend=sendSerial('datax')>MAJU</button>";
-  page += "<button style=margin:5px;width:90px;height:70px;background-color:green;color:white;font-weight:bold onmousedown=sendSerial('datal') ontouchstart=sendSerial('datal')>LEPAS</button>";
+  page += "<button style=margin:5px;width:90px;height:70px;background-color:green;color:white;font-weight:bold onmousedown=sendSerial('datam') ontouchstart=sendSerial('datam')>S-R</button>";
   page += "<br>";
   //MENU TENGAH
   page += "<button style=margin:5px;width:90px;height:70px;background-color:#E41F33;color:white;font-weight:bold onmousedown=sendSerial('dataa') onmouseup=getsend('datax') ontouchstart=sendSerial('dataa') ontouchend=sendSerial('datax')>KIRI</button>";
@@ -394,6 +397,16 @@ static esp_err_t dataO_handler(httpd_req_t *req) {
 }
 static esp_err_t dataP_handler(httpd_req_t *req) {
   Serial.println("p");
+  httpd_resp_set_type(req, "text/html");
+  return httpd_resp_send(req, "OK", 2);
+}
+static esp_err_t dataN_handler(httpd_req_t *req) {
+  Serial.println("n");
+  httpd_resp_set_type(req, "text/html");
+  return httpd_resp_send(req, "OK", 2);
+}
+static esp_err_t dataM_handler(httpd_req_t *req) {
+  Serial.println("m");
   httpd_resp_set_type(req, "text/html");
   return httpd_resp_send(req, "OK", 2);
 }
@@ -485,6 +498,20 @@ void startCameraServer() {
     .handler   = dataP_handler,
     .user_ctx  = NULL
   };
+  
+    httpd_uri_t dataN_uri = {
+    .uri       = "/datan",
+    .method    = HTTP_GET,
+    .handler   = dataN_handler,
+    .user_ctx  = NULL
+  };
+  ;
+    httpd_uri_t dataM_uri = {
+    .uri       = "/datam",
+    .method    = HTTP_GET,
+    .handler   = dataM_handler,
+    .user_ctx  = NULL
+  };
   httpd_uri_t index_uri = {
     .uri       = "/",
     .method    = HTTP_GET,
@@ -543,6 +570,8 @@ void startCameraServer() {
     httpd_register_uri_handler(camera_httpd, &dataI_uri);
     httpd_register_uri_handler(camera_httpd, &dataO_uri);
     httpd_register_uri_handler(camera_httpd, &dataP_uri);
+    httpd_register_uri_handler(camera_httpd, &dataN_uri);
+    httpd_register_uri_handler(camera_httpd, &dataM_uri);
   }
 
   config.server_port += 1;

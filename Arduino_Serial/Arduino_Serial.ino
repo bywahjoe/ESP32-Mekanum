@@ -6,6 +6,20 @@
 Servo myservo1;
 Servo myservo2;
 Servo myservo3;
+Servo myservo4;
+//SETTING SERVO
+
+//DEFAULT
+int interval = 5;
+int servo1 = 172;
+int servo2 = 90;
+int servo3 = 90;
+int servo4 = 90;
+
+int nowservo1 = servo1;
+int nowservo2 = servo2;
+int nowservo3 = servo3;
+int nowservo4 = servo4;
 
 String recv;
 int setDefaultSpeed = 100;
@@ -22,12 +36,16 @@ void motorKananA(int myspeed = setDefaultSpeed);
 void motorKananB(int myspeed = setDefaultSpeed);
 void setup() {
   Serial.begin(115200);
+
   Serial2.begin(115200);
   //SERVO
   myservo1.attach(pin_servo1);
   myservo2.attach(pin_servo2);
   myservo3.attach(pin_servo3);
+  myservo4.attach(pin_servo4);
   setDefaultServo();
+
+
   //MOTOR
   pinMode(kiriA_ENA, OUTPUT);
   pinMode(kiriA_ENB, OUTPUT);
@@ -52,39 +70,44 @@ void setup() {
   delay(10000);//WAIT ESP BOOTING
 }
 void loop() {
-  
-    if (Serial2.available()) {
-      recv = char(Serial2.read());
-      recv.trim();
-      if (recv.length() > 0) {
-  
-        Serial.println(recv);
-        if (recv == "w") maju();
-        else if (recv == "a") kiri();
-        else if (recv == "s") mundur();
-        else if (recv == "d") kanan();
-        else if (recv == "q") muterKiri();
-        else if (recv == "e") muterKanan();
-        else if (recv == "x") stops();
-        else if (recv == "t") tarik();
-        else if (recv == "l") lepas();
-        else if (recv == "y") camKiri();
-        else if (recv == "u") camTengah();
-        else if (recv == "i") camKanan();
-        else if (recv == "o") freeA();
-        else if (recv == "p") freeB();
-        else{}
-        //Serial.println("OK");
-      }
+  //Serial.println("ok");
+  //delay(1000);
+  if (Serial2.available()) {
+    recv = char(Serial2.read());
+    recv.trim();
+    if (recv.length() > 0) {
+
+      // Serial.println(recv);
+      if (recv == "w") maju();
+      else if (recv == "a") kiri();
+      else if (recv == "s") mundur();
+      else if (recv == "d") kanan();
+      else if (recv == "q") muterKiri();
+      else if (recv == "e") muterKanan();
+      else if (recv == "x") stops();
+      else if (recv == "t") plusC();
+      else if (recv == "y") minA();
+      else if (recv == "u") plusA();
+      else if (recv == "l") minC();
+      else if (recv == "i") minB();
+      else if (recv == "p") setDefaultServo();
+      else if (recv == "o") plusB();
+      else if (recv == "n") plusDir();
+      else if (recv == "m") minDir();
+      else {}
+      //Serial.println("OK");
     }
-//  maju();
-//  delay(3000);
-//  stops();
-//  delay(3000);
-//  mundur();
-//  delay(3000);
-//  stops();
-//  delay(3000);
+  }
+
+
+  //  maju();
+  //  delay(3000);
+  //  stops();
+  //  delay(3000);
+  //  mundur();
+  //  delay(3000);
+  //  stops();
+  //  delay(3000);
   //  kiri();
   //  delay(3000);
   //  stops();
@@ -94,14 +117,67 @@ void loop() {
   //  stops();
   //  delay(3000);
 }
-void setDefaultServo() {}
-void freeA(){}
-void freeB(){}
-void tarik() {}
-void lepas() {}
-void camKiri(){}
-void camTengah(){}
-void camKanan(){}
+void setDefaultServo() {
+  myservo1.write(servo1);
+  myservo2.write(servo2);
+  myservo3.write(servo3);
+  myservo4.write(servo4);
+
+  nowservo1 = servo1;
+  nowservo2 = servo2;
+  nowservo3 = servo3;
+  nowservo4 = servo4;
+
+
+}
+void minC() {
+  int val = nowservo4 - interval;
+  val = constrain(val, 0, 180);
+  nowservo4 = val;
+  myservo4.write(val);
+}
+void plusC() {
+  int val = nowservo4 + interval;
+  val = constrain(val, 0, 180);
+  nowservo4 = val;
+  myservo4.write(val);
+}
+void minA() {
+  int val = nowservo3 - interval;
+  val = constrain(val, 0, 180);
+  nowservo3 = val;
+  myservo3.write(val);
+}
+void plusA() {
+  int val = nowservo3 + interval;
+  val = constrain(val, 0, 180);
+  nowservo3 = val;
+  myservo3.write(val);
+}
+void minB() {
+  int val = nowservo2 - interval;
+  val = constrain(val, 0, 180);
+  nowservo2 = val;
+  myservo2.write(val);
+}
+void plusB() {
+  int val = nowservo2 + interval;
+  val = constrain(val, 0, 180);
+  nowservo2 = val;
+  myservo2.write(val);
+}
+void minDir() {
+  int val = nowservo1 - interval;
+  val = constrain(val, 0, 172);
+  nowservo1 = val;
+  myservo1.write(val);
+}
+void plusDir() {
+  int val = nowservo1 + interval;
+  val = constrain(val, 0, 172);
+  nowservo1 = val;
+  myservo1.write(val);
+}
 void motorKiriA(int myspeed) {
   int varA = 0, varB = 0;
 
@@ -133,10 +209,10 @@ void motorKiriB(int myspeed) {
     digitalWrite(kiriB_ENB, HIGH);
   }
   else if (myspeed < 0) {
-    varB = abs(myspeed)+40;
+    varB = abs(myspeed) + 40;
   }
   else {
-    varA = myspeed+40;
+    varA = myspeed + 40;
   }
   analogWrite(kiriB_RPWM, varA);
   analogWrite(kiriB_LPWM, varB);
