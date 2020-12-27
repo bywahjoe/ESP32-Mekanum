@@ -305,6 +305,7 @@ static esp_err_t index_handler(httpd_req_t *req) {
   page += "<button style=margin:5px;width:70px;height:60px;background-color:#1F1FF9;color:white;font-weight:bold onmousedown=sendSerial('datal') ontouchstart=sendSerial('datal')>C-T</button>";
   page+="<br>";
   page += "<button style=margin:5px;width:70px;height:60px;background-color:#1F1FF9;color:white;font-weight:bold onmousedown=sendSerial('datai') ontouchstart=sendSerial('datai')>B-UP</button>";
+  page += "<button style=margin:5px;width:70px;height:60px;background-color:#B71FE4;color:white;font-weight:bold onmousedown=sendSerial('datab') onmouseup=getsend('datax') ontouchstart=sendSerial('datab') ontouchend=sendSerial('datax')>AUTO</button>";
   page += "<button style=margin:5px;width:70px;height:60px;background-color:green;color:white;font-weight:bold onmousedown=sendSerial('datap') ontouchstart=sendSerial('datap')>DFLT</button>";
   page += "<button style=margin:5px;width:70px;height:60px;background-color:#1F1FF9;color:white;font-weight:bold onmousedown=sendSerial('datao') ontouchstart=sendSerial('datao')>B-DW</button>";
   //MENU ATAS
@@ -329,7 +330,11 @@ static esp_err_t index_handler(httpd_req_t *req) {
 
   return httpd_resp_send(req, &page[0], strlen(&page[0]));
 }
-
+static esp_err_t dataB_handler(httpd_req_t *req) {
+  Serial.println("b");
+  httpd_resp_set_type(req, "text/html");
+  return httpd_resp_send(req, "OK", 2);
+}
 static esp_err_t dataL_handler(httpd_req_t *req) {
   Serial.println("l");
   httpd_resp_set_type(req, "text/html");
@@ -414,6 +419,13 @@ static esp_err_t dataM_handler(httpd_req_t *req) {
 void startCameraServer() {
   httpd_config_t config = HTTPD_DEFAULT_CONFIG();
 
+
+  httpd_uri_t dataB_uri = {
+    .uri       = "/datab",
+    .method    = HTTP_GET,
+    .handler   = dataB_handler,
+    .user_ctx  = NULL
+  };
   httpd_uri_t dataL_uri = {
     .uri       = "/datal",
     .method    = HTTP_GET,
@@ -555,7 +567,7 @@ void startCameraServer() {
     httpd_register_uri_handler(camera_httpd, &index_uri);
 
     //INSTAL URI SERIAL HANDLER
-    
+    httpd_register_uri_handler(camera_httpd, &dataB_uri);    
     httpd_register_uri_handler(camera_httpd, &dataL_uri);
     httpd_register_uri_handler(camera_httpd, &dataT_uri);
     httpd_register_uri_handler(camera_httpd, &dataW_uri);
