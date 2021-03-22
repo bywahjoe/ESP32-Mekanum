@@ -152,6 +152,7 @@ void strategi(){
     belok_kanan(150,100);
     percabangan(1, 1000,0);
 
+
 }
 void otomatis(){
   strategi();  
