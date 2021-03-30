@@ -1,23 +1,17 @@
 import pyfirmata
+import platform
 from ardupin import *
 
 #SETTING PORT
-ARDUINO_COM_PORT='COM6' #/dev/ttyUSB0
+arch=platform.system()
+if arch != 'Windows':
+	ARDUINO_COM_PORT='/dev/ttyACM0' #/dev/ttyUSB0
+else:
+	ARDUINO_COM_PORT='COM3' #/dev/ttyUSB0
+
 board = pyfirmata.ArduinoMega(ARDUINO_COM_PORT)
 it=pyfirmata.util.Iterator(board)
 it.start()
-
-#global vservo1,vservo2,vservo3,vservo4,vservo5,vservo6,vservo7,vservo8
-
-# #INIT SERVO
-#myservo1=board.get_pin('d:53:s')
-# myservo2=board.get_pin(SERVO2_PIN)
-# myservo3=board.get_pin(SERVO3_PIN)
-# myservo4=board.get_pin(SERVO4_PIN)
-# myservo5=board.get_pin(SERVO5_PIN)
-# myservo6=board.get_pin(SERVO6_PIN)
-# myservo7=board.get_pin(SERVO7_PIN)
-# myservo8=board.get_pin(SERVO8_PIN)
 
 #INIT MOTOR
 DKIRI_LPWM=board.get_pin(DKIRI_LPWM_PIN)
@@ -39,7 +33,6 @@ BKANAN_LPWM=board.get_pin(BKANAN_LPWM_PIN)
 BKANAN_RPWM=board.get_pin(BKANAN_RPWM_PIN) 
 BKANAN_LEN=board.get_pin(BKANAN_LEN_PIN) 
 BKANAN_REN=board.get_pin(BKANAN_REN_PIN) 
-
 
 def motor_dkiri(inputspeed):
 	speed=inputspeed/255
@@ -120,4 +113,4 @@ def setMotor(dkiri,bkiri,dkanan,bkanan):
 	motor_bkanan(bkanan)
 def stops():
 	setMotor(0,0,0,0)
-setMotor(100,100,100,100)
+#setMotor(100,100,100,100)
