@@ -40,11 +40,8 @@ void setup() {
   pinMode(pinPompa, OUTPUT);
   pinMode(pinPenyedot, OUTPUT);
   pinMode(pinIR,INPUT);
-  
-  pompaON();
-  penyedotON();
-
   mlx.begin();
+  
   //LCD
   lcd.init();
   lcd.backlight();
@@ -56,7 +53,6 @@ void setup() {
   //PEL
   pinMode(pelR, OUTPUT);
   //  pinMode(pelL, OUTPUT);
-  pelON();
 
   //SENSOR GARIS
   pinMode(pinS1, INPUT);
@@ -93,17 +89,17 @@ void setup() {
   pwm.begin();
   pwm.setPWMFreq(SERVO_FREQ);  // Analog servos run at ~50 Hz updates
   delay(10);
-
+  delay(2000);
   runServo(2, 70);
+  
   runServo(0, 120);
+  delay(3000);
 
-//  strategi();
-
-
+  strategi();
 }
 
 void loop() {
-  Serial.println(getIR);
+//  Serial.println(getIR);
   
   //  updateSensor();
   //  updateLCD();
@@ -411,8 +407,19 @@ void motionServo() {
 
 }
 void strategi() {
-  percabangan(1, 30, 1200);
-  percabangan(1, 30, 1200);
+  unsigned long before,now;
+  now=millis();
+  before=millis();
+  while(1){
+    now=millis();
+    if(now-before>2000)break; 
+    else{followLine();}
+    
+    
+  }
+  percabangan(1, 30, 1500);
+  //
+  percabangan(1, 30, 800);
   motionServo();
   percabangan(1, 30, 1200);
   remDelay(100);
@@ -429,11 +436,33 @@ void strategi() {
       break;
     }
   }
+  cleanON();
+  updateLCD();
+  
+  percabangan(1, 30, 500);
+  belok_kiri(180,50);
+  percabangan(1, 30, 500);
+  belok_kiri(180,50);
+  //LURUS
+  percabangan(1, 30, 500);
+  belok_kanan(180,50);
+  percabangan(1, 30, 500);
+  belok_kanan(200,50);
+
+  //Finish
+  percabangan(1, 30, 500);
+  belok_kiri(180,50);
+  percabangan(1, 30, 500);
+  belok_kiri(200,50);
+  percabangan(1, 30, 1000);
+  //Balik
+  belok_kiri(180,50);
+  percabangan(1, 30, 500);
+  belok_kanan(200,50);
+  percabangan(1, 30, 500);
   cleanOFF();
   updateLCD();
-  percabangan(1, 30, 1200);
-  belok_kanan(180,50);
-  percabangan(1, 30, 1200);
+  
   remDelay(100);
   
   
