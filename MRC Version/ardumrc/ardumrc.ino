@@ -421,8 +421,8 @@ void strategi() {
   //
   percabangan(1, 30, 800);
   motionServo();
-  percabangan(1, 30, 1200);
-  remDelay(100);
+  percabangan(1, 300, 100);
+  remDelay(1000);
   
   while (1) {
     if (!getIR) {
@@ -439,8 +439,8 @@ void strategi() {
   cleanON();
   updateLCD();
   
-  percabangan(1, 30, 500);
-  belok_kiri(180,50);
+  percabangan(1, 300, 300);
+  belok_kiri(230,50);
   percabangan(1, 30, 500);
   belok_kiri(180,50);
   //LURUS
